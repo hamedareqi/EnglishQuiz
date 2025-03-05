@@ -126,8 +126,8 @@ button:hover {
     justify-content: space-between;
 }
 
-.option-container button {
-    flex: 1;
+.option-button {
+    flex-grow: 1;
     padding: 10px;
     font-size: 0.9rem;
     border-radius: 5px;
@@ -140,7 +140,7 @@ button:hover {
     margin-right: 10px; /* مسافة بين الزر وزر الصوت */
 }
 
-.option-container button:hover {
+.option-button:hover {
     background-color: #f2f2f2; /* لون عند التمرير */
     transform: scale(1.03);
 }
@@ -163,8 +163,8 @@ button:hover {
     padding: 0;
     cursor: pointer;
     font-size: 0.8rem;
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
