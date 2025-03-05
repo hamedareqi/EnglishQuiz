@@ -1,0 +1,223 @@
+@font-face {
+    font-family: 'CustomFont';
+    src: url('custom-font.ttf') format('truetype');
+}
+
+body {
+    font-family: 'CustomFont', "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f8ff;
+    color: #333;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 40px auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+}
+
+.header-image {
+    width: 60px;
+    height: 60px;
+    margin-left: 10px;
+    margin-bottom: 10px;
+}
+
+h1 {
+    color: #0056b3;
+    margin-bottom: 20px;
+    flex: none;
+    font-size: 2rem;
+    line-height: 1;
+}
+
+button {
+    font-family: 'CustomFont', "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    padding: 10px 20px;
+    margin: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #0056b3;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s;
+}
+
+button:hover {
+    background-color: #004494;
+    transform: scale(1.05);
+}
+
+.center-button {
+    display: block;
+    margin: 20px auto;
+}
+
+#unitSelection {
+    margin: 20px 0;
+    text-align: left;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px;
+}
+
+.unit {
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    transition: box-shadow 0.3s ease;
+    transform: perspective(1px) translateZ(0);
+}
+
+.unit:hover {
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    transform: scale(1.05);
+}
+
+.unit h3 {
+    margin-top: 0;
+    color: #0056b3;
+}
+
+.unit label {
+    display: block;
+    margin: 10px 0;
+}
+
+.unit input[type="number"] {
+    width: 60px;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+#quizInterface {
+    margin-top: 20px;
+}
+
+#questionTitle {
+    margin-bottom: 10px;
+}
+
+#options {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+}
+
+.option-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.option-container button {
+    width: calc(100% - 40px); /* جعل زر الإجابة يأخذ معظم المساحة */
+    padding: 10px;
+    font-size: 0.9rem;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    background-color: #f8f9fa;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s;
+}
+
+.option-container button:hover {
+    background-color: #e2e6ea;
+    transform: scale(1.03);
+}
+
+.speak-button {
+    margin-left: 10px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 0;
+    cursor: pointer;
+    font-size: 0.8rem;
+    width: 30px; /* جعل الزر مربع */
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.speak-button:hover {
+    background-color: #218838;
+}
+
+.feedback-message {
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+.progress-container {
+    width: 100%;
+    background-color: #e9ecef;
+    border-radius: 5px;
+    margin: 20px 0;
+}
+
+.progress-bar {
+    width: 0;
+    height: 10px;
+    background-color: #0056b3;
+    border-radius: 5px;
+    transition: width 0.3s ease;
+}
+
+#progressText {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+#results {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+footer {
+    text-align: center;
+    margin-top: 40px;
+    padding: 20px;
+    background-color: transparent;
+    font-size: 0.9em;
+    color: #555;
+}
+
+@media screen and (max-width: 600px) {
+    .header {
+        justify-content: center;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    .header-image {
+        margin-left: 5px;
+        width: 50px;
+        height: 50px;
+        margin-bottom: 15px;
+    }
+}
