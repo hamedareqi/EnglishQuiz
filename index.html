@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="English Course (2) Assessment Test for Level (1) Technical Students - Ibn Sirin College">
+    <title>English 102 Quiz</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <script src="https://code.responsivevoice.org/responsivevoice.js"></script> <!-- إضافة مكتبة ResponsiveVoice -->
+</head>
+<body>
+    <div class="container animate__animated animate__fadeIn">
+        <div class="header">
+            <h1 id="title" class="animate__animated animate__fadeInDown">English 102 Quiz</h1>
+            <div id="lottie-animation" class="header-image animate__animated animate__fadeInDown"></div>
+        </div>
+        <p id="courseDescription" class="animate__animated animate__fadeInDown" style="color: #0056b3; font-size: 1rem;">English Course (2) Assessment Test for Level (1) Technical Students - Ibn Sirin College</p>
+        <p id="description" class="animate__animated animate__fadeIn">Select the units and number of questions for each unit to start the quiz.</p>
+
+        <div id="unitSelection" class="animate__animated animate__fadeIn">
+            <!-- الوحدات ستضاف هنا بشكل ديناميكي باستخدام JavaScript -->
+        </div>
+
+        <button id="startQuiz" class="animate__animated animate__pulse">Start Quiz</button>
+
+        <div id="quizInterface" style="display: none;">
+            <h2 id="questionTitle"></h2>
+            <div id="options"></div>
+            <p id="feedback" class="feedback-message"></p>
+            <div class="progress-container">
+                <div id="progressBar" class="progress-bar"></div>
+            </div>
+            <p id="progressText">Question 1 of 10</p>
+            <button id="nextQuestion" style="display: none;" class="center-button">Next Question</button>
+        </div>
+
+        <div id="results" style="display: none;">
+            <h2>Quiz Results</h2>
+            <p id="score"></p>
+            <button id="restartQuiz" class="center-button">Restart Quiz</button>
+        </div>
+    </div>
+
+    <footer>
+        <b><p>© 2025 Created by Hamed Al-Areqi in cooperation with Dr.Amaal AL-Dowah</p></b>
+        <b><a href="https://wa.me/967770737621" target="_blank" style="text-decoration: none; padding-bottom: 2.5%;">Contact me via WhatsApp 967770737621</a></b>
+    </footer>
+
+    <script>
+        fetch('animation.json')
+            .then(response => response.json())
+            .then(data => {
+                lottie.loadAnimation({
+                    container: document.getElementById('lottie-animation'), // تحديد الحاوية
+                    renderer: 'svg',
+                    loop: true,
+                    autoplay: true,
+                    animationData: data // تمرير بيانات JSON
+                });
+            })
+            .catch(error => console.error('Error loading animation:', error));
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>
