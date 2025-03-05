@@ -123,11 +123,11 @@ button:hover {
 .option-container {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
 }
 
 .option-container button {
-    width: calc(100% - 40px); /* جعل زر الإجابة يأخذ معظم المساحة */
+    flex: 1;
     padding: 10px;
     font-size: 0.9rem;
     border-radius: 5px;
@@ -136,11 +136,22 @@ button:hover {
     color: #333;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s;
+    text-align: left;
 }
 
 .option-container button:hover {
     background-color: #e2e6ea;
     transform: scale(1.03);
+}
+
+.correct-answer {
+    background-color: #03d634 !important;
+    color: white !important;
+}
+
+.wrong-answer {
+    background-color: #f30119 !important;
+    color: white !important;
 }
 
 .speak-button {
@@ -152,11 +163,12 @@ button:hover {
     padding: 0;
     cursor: pointer;
     font-size: 0.8rem;
-    width: 30px; /* جعل الزر مربع */
+    width: 30px;
     height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
 }
 
 .speak-button:hover {
