@@ -3,119 +3,109 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>📩 إرسال رسالة للإدارة</title>
+<title>📩 أرسل رسالة للإدارة</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; margin:0; padding:0; font-family: 'Cairo', sans-serif; }
-  body {
-    background: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%);
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .container {
-    background: #fff;
-    border-radius: 20px;
-    padding: 30px 25px;
-    width: 100%;
-    max-width: 450px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-    transform: scale(0);
-    animation: scaleIn 0.5s forwards;
-  }
-  @keyframes scaleIn {
-    to { transform: scale(1); }
-  }
-  h2 {
-    text-align: center;
-    margin-bottom: 25px;
-    color: #333;
-    font-weight: 700;
-    letter-spacing: 1px;
-    animation: fadeIn 1s forwards;
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-20px);}
-    to { opacity: 1; transform: translateY(0);}
-  }
-  textarea {
-    width: 100%;
-    height: 130px;
-    padding: 15px;
-    border-radius: 12px;
-    border: 1px solid #ccc;
-    resize: none;
-    font-size: 16px;
-    margin-bottom: 20px;
-    transition: all 0.3s ease;
-  }
-  textarea:focus {
-    border-color: #2A9DF4;
-    box-shadow: 0 0 8px rgba(42,157,244,0.3);
-    outline: none;
-  }
-  button {
-    width: 100%;
-    padding: 14px;
-    background: #2A9DF4;
-    color: #fff;
-    border: none;
-    border-radius: 12px;
-    font-size: 18px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    box-shadow: 0 8px 20px rgba(42,157,244,0.3);
-  }
-  button:hover {
-    background: #1e8de2;
-    transform: translateY(-2px);
-    box-shadow: 0 12px 25px rgba(42,157,244,0.4);
-  }
-  .success-msg {
-    text-align: center;
-    margin-top: 15px;
-    color: green;
-    font-weight: 600;
-    opacity: 0;
-    animation: fadeIn 0.5s forwards;
-  }
+body {
+    font-family: Arial, sans-serif;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    margin:0;
+    background: linear-gradient(135deg,#74ebd5,#ACB6E5);
+}
+.container {
+    background:white;
+    padding:30px;
+    border-radius:20px;
+    width:100%;
+    max-width:450px;
+    box-shadow:0 15px 40px rgba(0,0,0,0.2);
+    transform:scale(0);
+    animation:scaleIn 0.5s forwards;
+}
+@keyframes scaleIn { to { transform: scale(1); } }
+h2 {
+    text-align:center;
+    margin-bottom:25px;
+    color:#333;
+    font-weight:700;
+    letter-spacing:1px;
+    animation:fadeIn 1s forwards;
+}
+@keyframes fadeIn { from {opacity:0; transform:translateY(-20px);} to {opacity:1; transform:translateY(0);} }
+textarea {
+    width:100%;
+    height:130px;
+    padding:15px;
+    border-radius:12px;
+    border:1px solid #ccc;
+    margin-bottom:20px;
+    font-size:16px;
+    resize:none;
+    transition:all 0.3s ease;
+}
+textarea:focus {
+    border-color:#2A9DF4;
+    box-shadow:0 0 8px rgba(42,157,244,0.3);
+    outline:none;
+}
+button {
+    width:100%;
+    padding:14px;
+    background:#2A9DF4;
+    color:#fff;
+    border:none;
+    border-radius:12px;
+    font-size:18px;
+    cursor:pointer;
+    font-weight:600;
+    transition:all 0.3s ease;
+    box-shadow:0 8px 20px rgba(42,157,244,0.3);
+}
+button:hover {
+    background:#1e8de2;
+    transform:translateY(-2px);
+    box-shadow:0 12px 25px rgba(42,157,244,0.4);
+}
+.success-msg {
+    text-align:center;
+    margin-top:15px;
+    color:green;
+    font-weight:600;
+    opacity:0;
+    animation:fadeIn 0.5s forwards;
+    display:none;
+}
 </style>
 </head>
 <body>
 <div class="container">
-  <h2>📩 أرسل رسالة للإدارة</h2>
-  <textarea id="msgBox" placeholder="اكتب رسالتك هنا..."></textarea>
-  <button onclick="sendMsg()">إرسال</button>
-  <div id="success" class="success-msg">✅ تم إرسال رسالتك!</div>
+<h2>📩 أرسل رسالة للإدارة</h2>
+<textarea id="msgBox" placeholder="اكتب رسالتك هنا..."></textarea>
+<button onclick="sendMsg()">إرسال</button>
+<div id="success" class="success-msg">✅ تم إرسال رسالتك!</div>
 </div>
 
 <script>
 const tg = window.Telegram.WebApp;
 tg.expand();
 
-function sendMsg() {
+function sendMsg(){
     const text = document.getElementById("msgBox").value.trim();
     if(!text){
-        alert("⚠️ الرجاء كتابة رسالة أولاً.");
+        alert("⚠️ الرجاء كتابة رسالة.");
         return;
     }
 
-    // إرسال البيانات مباشرة للبوت
+    // إرسال البيانات إلى البوت
     tg.sendData(JSON.stringify({
         message: text,
         user: tg.initDataUnsafe.user || {}
     }));
 
-    // عرض رسالة النجاح مع أنيميشن
-    const success = document.getElementById("success");
-    success.style.opacity = "0";
-    success.style.display = "block";
-    setTimeout(() => { success.style.opacity = "1"; }, 100);
-
-    // مسح النص بعد الإرسال
+    document.getElementById("success").style.display = "block";
     document.getElementById("msgBox").value = "";
 }
 </script>
