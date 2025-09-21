@@ -3,47 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>📊 عداد التقدم</title>
+<title>📊 Counter WebApp</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-body {
-    font-family: Arial, sans-serif;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
-    margin:0;
-    background: linear-gradient(135deg,#74ebd5,#ACB6E5);
-}
-.container {
-    background:white;
-    padding:40px;
-    border-radius:20px;
-    text-align:center;
-    box-shadow:0 15px 40px rgba(0,0,0,0.2);
-    max-width:350px;
-    width:100%;
-    animation:fadeIn 0.5s ease forwards;
-}
-@keyframes fadeIn {
-    from {opacity:0; transform:translateY(-20px);}
-    to {opacity:1; transform:translateY(0);}
-}
-h1 {
-    font-size:3rem;
-    margin-bottom:20px;
-    color:#2A9DF4;
-}
-button {
-    padding:12px 25px;
-    margin:5px;
-    font-size:18px;
-    border:none;
-    border-radius:12px;
-    cursor:pointer;
-    color:white;
-    background:#2A9DF4;
-    transition:all 0.3s ease;
-}
+body { font-family: Arial; display:flex; justify-content:center; align-items:center; height:100vh; margin:0; background: linear-gradient(135deg,#74ebd5,#ACB6E5);}
+.container { background:white; padding:30px; border-radius:20px; box-shadow:0 10px 30px rgba(0,0,0,0.2); text-align:center; max-width:400px; width:90%;}
+h2 { margin-bottom:20px; color:#2A9DF4;}
+button { margin:5px; padding:10px 20px; border:none; border-radius:10px; background:#2A9DF4; color:white; cursor:pointer;}
 button:hover {background:#1e8de2;}
 .reset {background:#ff4d4d;}
 .reset:hover {background:#e03b3b;}
@@ -51,37 +17,63 @@ button:hover {background:#1e8de2;}
 </head>
 <body>
 <div class="container">
-    <h1 id="counter">0</h1>
-    <button onclick="increment()">➕ زيادة</button>
-    <button onclick="decrement()">➖ إنقاص</button>
-    <button class="reset" onclick="resetCounter()">🔄 إعادة</button>
+<h2>📊 عداد النقاط</h2>
+<h1 id="counter">0</h1>
+<button onclick="addPoint()">➕ زيادة</button>
+<button onclick="subtractPoint()">➖ إنقاص</button>
+<button class="reset" onclick="resetCounter()">🔄 إعادة</button>
 </div>
 
-<script>
-// تحميل القيمة من LocalStorage عند فتح الصفحة
-let counter = parseInt(localStorage.getItem('myCounter')) || 0;
-document.getElementById('counter').textContent = counter;
+<script type="module">
+  // Import Firebase Modular SDK
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+  import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
 
-// تحديث العرض وتخزين القيمة
-function updateCounter() {
-    document.getElementById('counter').textContent = counter;
-    localStorage.setItem('myCounter', counter);
-}
+  // Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyBwkA_x7-qE_M0Cc3lrM-Xor0tFOJThwyc",
+    authDomain: "test-a57a0.firebaseapp.com",
+    projectId: "test-a57a0",
+    storageBucket: "test-a57a0.firebasestorage.app",
+    messagingSenderId: "650619718005",
+    appId: "1:650619718005:web:903f74ecf0e748ae32ab3c"
+  };
 
-function increment() {
-    counter++;
-    updateCounter();
-}
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
 
-function decrement() {
-    counter--;
-    updateCounter();
-}
+  // Telegram WebApp
+  const tg = window.Telegram.WebApp;
+  tg.expand();
+  const user = tg.initDataUnsafe.user || { id: 'guest', first_name: 'Guest' };
 
-function resetCounter() {
-    counter = 0;
-    updateCounter();
-}
+  const counterEl = document.getElementById('counter');
+  let counter = parseInt(localStorage.getItem(`counter_${user.id}`)) || 0;
+
+  // تحديث العرض والحفظ
+  function updateDisplay() {
+    counterEl.textContent = counter;
+    localStorage.setItem(`counter_${user.id}`, counter);
+    set(ref(db, 'users/' + user.id), { points: counter, name: user.first_name + " " + (user.last_name||"") });
+  }
+
+  // استرجاع النقاط من Firebase عند التحميل
+  get(child(ref(db), 'users/' + user.id)).then((snapshot)=>{
+    if(snapshot.exists()){
+      counter = snapshot.val().points;
+    }
+    updateDisplay();
+  }).catch((error)=>{
+    console.error("Firebase read error:", error);
+    updateDisplay();
+  });
+
+  // دوال التحكم
+  window.addPoint = ()=>{ counter++; updateDisplay(); }
+  window.subtractPoint = ()=>{ counter--; updateDisplay(); }
+  window.resetCounter = ()=>{ counter=0; updateDisplay(); }
+
 </script>
 </body>
 </html>
