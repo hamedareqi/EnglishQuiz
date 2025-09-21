@@ -3,77 +3,49 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>📊 Counter WebApp</title>
+<title>🔒 وصول محمي</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-body { font-family: Arial; display:flex; justify-content:center; align-items:center; height:100vh; margin:0; background: linear-gradient(135deg,#74ebd5,#ACB6E5);}
-.container { background:white; padding:30px; border-radius:20px; box-shadow:0 10px 30px rgba(0,0,0,0.2); text-align:center; max-width:400px; width:90%;}
-h2 { margin-bottom:20px; color:#2A9DF4;}
-button { margin:5px; padding:10px 20px; border:none; border-radius:10px; background:#2A9DF4; color:white; cursor:pointer;}
-button:hover {background:#1e8de2;}
-.reset {background:#ff4d4d;}
-.reset:hover {background:#e03b3b;}
+body { font-family: Arial; display:flex; justify-content:center; align-items:center; height:100vh; margin:0; background:#f0f2f5;}
+.container { text-align:center; padding:30px; border-radius:15px; background:white; box-shadow:0 10px 30px rgba(0,0,0,0.2);}
+h2 { color:#2A9DF4;}
+.error { color:red; }
 </style>
 </head>
 <body>
-<div class="container">
-<h2>📊 عداد النقاط</h2>
-<h1 id="counter">0</h1>
-<button onclick="addPoint()">➕ زيادة</button>
-<button onclick="subtractPoint()">➖ إنقاص</button>
-<button class="reset" onclick="resetCounter()">🔄 إعادة</button>
+<div class="container" id="content">
+<h2>🔄 جاري التحقق...</h2>
 </div>
 
-<script type="module">
-  // Import Firebase Modular SDK
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
-  import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
+<script>
+const tg = window.Telegram.WebApp;
+tg.expand();
 
-  // Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyBwkA_x7-qE_M0Cc3lrM-Xor0tFOJThwyc",
-    authDomain: "test-a57a0.firebaseapp.com",
-    projectId: "test-a57a0",
-    storageBucket: "test-a57a0.firebasestorage.app",
-    messagingSenderId: "650619718005",
-    appId: "1:650619718005:web:903f74ecf0e748ae32ab3c"
-  };
+// تحقق إذا تم الوصول من Telegram WebApp
+const user = tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user : null;
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
+// رابط الملف JSON على GitHub (Raw URL)
+const allowedIDsUrl = "https://raw.githubusercontent.com/hamedareqi/EnglishQuiz/refs/heads/main/allowed.json";
 
-  // Telegram WebApp
-  const tg = window.Telegram.WebApp;
-  tg.expand();
-  const user = tg.initDataUnsafe.user || { id: 'guest', first_name: 'Guest' };
+fetch(allowedIDsUrl)
+  .then(res => res.json())
+  .then(data => {
+    const ids = data.allowed_ids;
+    const contentDiv = document.getElementById("content");
 
-  const counterEl = document.getElementById('counter');
-  let counter = parseInt(localStorage.getItem(`counter_${user.id}`)) || 0;
-
-  // تحديث العرض والحفظ
-  function updateDisplay() {
-    counterEl.textContent = counter;
-    localStorage.setItem(`counter_${user.id}`, counter);
-    set(ref(db, 'users/' + user.id), { points: counter, name: user.first_name + " " + (user.last_name||"") });
-  }
-
-  // استرجاع النقاط من Firebase عند التحميل
-  get(child(ref(db), 'users/' + user.id)).then((snapshot)=>{
-    if(snapshot.exists()){
-      counter = snapshot.val().points;
+    if(user && ids.includes(user.id)) {
+      contentDiv.innerHTML = `<h2>🎉 مرحباً ${user.first_name}</h2>
+                              <p>تم السماح لك بالدخول</p>`;
+      // ضع هنا باقي محتوى التطبيق
+    } else {
+      contentDiv.innerHTML = `<h2 class="error">❌ عذراً، ليس لديك إذن للوصول</h2>
+                              <p>يجب فتح الصفحة من داخل Telegram WebApp بمستخدم مصرح له.</p>`;
     }
-    updateDisplay();
-  }).catch((error)=>{
-    console.error("Firebase read error:", error);
-    updateDisplay();
+  })
+  .catch(err => {
+    console.error("خطأ في جلب قائمة IDs:", err);
+    document.getElementById("content").innerHTML = `<h2 class="error">حدث خطأ، يرجى المحاولة لاحقاً</h2>`;
   });
-
-  // دوال التحكم
-  window.addPoint = ()=>{ counter++; updateDisplay(); }
-  window.subtractPoint = ()=>{ counter--; updateDisplay(); }
-  window.resetCounter = ()=>{ counter=0; updateDisplay(); }
-
 </script>
 </body>
 </html>
