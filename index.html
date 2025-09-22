@@ -6,37 +6,69 @@
 <title>🔒 وصول محمي</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
+/* تصميم الصفحة بالكامل */
 body {
-  font-family: Arial, sans-serif;
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  margin: 0;
-  background: linear-gradient(135deg, #2A9DF4, #6EC1E4);
-  color: #333;
-  overflow: hidden;
+  background: linear-gradient(135deg, #1E3C72, #2A5298);
+  color: #fff;
 }
 .container {
-  text-align: center;
-  padding: 40px 30px;
-  border-radius: 20px;
-  background: white;
-  box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-  max-width: 400px;
+  max-width: 450px;
   width: 90%;
+  background: #ffffff;
+  color: #333;
+  border-radius: 20px;
+  padding: 40px 30px;
+  text-align: center;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.3);
   animation: fadeIn 1s ease-out;
 }
 h2 {
-  color: #2A9DF4;
   margin-bottom: 20px;
+  color: #2A9DF4;
 }
+p {
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.button-group a {
+  text-decoration: none;
+  padding: 12px 25px;
+  border-radius: 10px;
+  font-weight: bold;
+  color: white;
+  transition: all 0.3s ease;
+}
+.telegram-btn { background: #2AABEE; }
+.telegram-btn:hover { background: #1F91C8; transform: translateY(-3px); }
+.instagram-btn { background: #E1306C; }
+.instagram-btn:hover { background: #C72C5C; transform: translateY(-3px); }
+
 .error {
   color: red;
+  font-weight: bold;
 }
+
 @keyframes fadeIn {
   from {opacity: 0; transform: translateY(-20px);}
   to {opacity: 1; transform: translateY(0);}
+}
+
+/* متجاوب مع الشاشات الصغيرة */
+@media (max-width: 500px) {
+  .container { padding: 30px 20px; }
+  .button-group a { width: 100%; text-align: center; }
 }
 </style>
 </head>
@@ -49,7 +81,7 @@ h2 {
 const tg = window.Telegram.WebApp;
 tg.expand();
 
-// الحصول على بيانات المستخدم إذا فتح من Telegram WebApp
+// التحقق من بيانات المستخدم
 const user = tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user : null;
 
 // رابط الملف JSON على GitHub (Raw URL)
@@ -64,13 +96,18 @@ fetch(allowedIDsUrl)
     if(user && ids.includes(user.id)) {
       contentDiv.innerHTML = `
         <h2>🎉 مرحباً ${user.first_name}</h2>
-        <p>تم السماح لك بالدخول</p>
+        <p>تم السماح لك بالدخول.</p>
         <p>يمكنك الآن استخدام التطبيق بأمان.</p>
       `;
-      // يمكنك هنا إضافة أي محتوى آخر للتطبيق بعد السماح بالدخول
+      // ضع هنا أي محتوى إضافي بعد السماح بالدخول
     } else {
       contentDiv.innerHTML = `
         <h2 class="error">❌ عذراً، ليس لديك إذن للوصول</h2>
+        <p>للحصول على الإذن، يرجى التواصل معي:</p>
+        <div class="button-group">
+          <a href="https://t.me/hx_ed" target="_blank" class="telegram-btn">📩 تيليجرام</a>
+          <a href="https://www.instagram.com/hamedareqi" target="_blank" class="instagram-btn">📸 إنستجرام</a>
+        </div>
         <p>يجب فتح الصفحة من داخل Telegram WebApp بمستخدم مصرح له.</p>
       `;
     }
