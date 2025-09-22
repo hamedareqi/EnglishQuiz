@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>🎉 مرحبًا</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;height:100vh;display:flex;justify-content:center;align-items:center;background: linear-gradient(180deg,#0b2540,#07122a);font-family: "Segoe UI", Roboto, Arial, sans-serif;color:#e6eef9}
+  .card{background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02)); padding:30px 28px;border-radius:16px;max-width:720px;width:92%;box-shadow:0 12px 40px rgba(2,6,23,0.7);text-align:center}
+  h1{margin:0;font-size:22px;color:#fff}
+  p.lead{margin:8px 0 18px 0;color:#cfe8ff}
+  .meta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:10px}
+  .chip{background:rgba(255,255,255,0.04);padding:10px 14px;border-radius:12px;color:#dbeafe;font-weight:600}
+  .actions{display:flex;gap:10px;justify-content:center;margin-top:18px;flex-wrap:wrap}
+  a.btn{display:inline-block;padding:10px 16px;border-radius:10px;text-decoration:none;color:#06203a;background:#fff;font-weight:700}
+  .secondary{background:transparent;border:1px solid rgba(255,255,255,0.08);color:#cfe8ff}
+  .small{font-size:13px;color:#9fb6d6;margin-top:14px}
+  @media (max-width:520px){ h1{font-size:18px} .chip{padding:8px 10px}}
+</style>
+</head>
+<body>
+  <div class="card" id="card">
+    <h1>مرحباً بك في التطبيق</h1>
+    <p class="lead" id="welcomeLine">جارٍ تحميل بياناتك…</p>
+
+    <div class="meta" id="metaArea" style="display:none">
+      <div class="chip" id="nameChip">الاسم: —</div>
+      <div class="chip" id="idChip">ID: —</div>
+      <div class="chip" id="usernameChip">Username: —</div>
+    </div>
+
+    <div class="actions" id="actions" style="display:none">
+      <a class="btn" id="openFeature" href="#">✨ افتح التطبيق</a>
+      <a class="btn secondary" id="logout" href="#">🔙 خروج</a>
+    </div>
+
+    <div class="small">إذا واجهت أي مشكلة تواصل عبر @hx_ed أو @hamedareqi</div>
+  </div>
+
+<script>
+  (function(){
+    let tg = null;
+    try { tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null; } catch(e){ tg=null; }
+    if(!tg){
+      document.getElementById('welcomeLine').innerText = "هذه الصفحة يجب أن تُفتح داخل Telegram WebApp.";
+      return;
+    }
+    try{ tg.expand(); }catch(e){}
+
+    const user = tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user : null;
+    if(!user){
+      document.getElementById('welcomeLine').innerText = "لم نستطع جلب بيانات المستخدم.";
+      return;
+    }
+
+    // عرض بيانات المستخدم
+    document.getElementById('welcomeLine').innerText = `أهلاً ${user.first_name || ''} — تم السماح لك بالوصول`;
+    document.getElementById('nameChip').innerText = `الاسم: ${ (user.first_name||'') + (user.last_name ? ' '+user.last_name : '') }`;
+    document.getElementById('idChip').innerText = `ID: ${user.id}`;
+    document.getElementById('usernameChip').innerText = `Username: ${user.username ? '@'+user.username : '—'}`;
+    document.getElementById('metaArea').style.display = 'flex';
+    document.getElementById('actions').style.display = 'flex';
+
+    // مثال: زر لفتح ميزة داخل الويب آب (تعديل حسب حاجتك)
+    document.getElementById('openFeature').addEventListener('click', function(e){
+      e.preventDefault();
+      alert('ميزة توضيحية — ضع هنا أي وظيفة تريدها');
+    });
+
+    // زر خروج: نعود للصفحة الرئيسية أو نغلق الويب آب
+    document.getElementById('logout').addEventListener('click', function(e){
+      e.preventDefault();
+      try {
+        // في WebApp يمكنك إغلاق النافذة
+        tg.close();
+      } catch(err){
+        // أو إعادة التوجيه لصفحة البداية
+        window.location.href = 'index.html';
+      }
+    });
+  })();
+</script>
+</body>
+</html>
