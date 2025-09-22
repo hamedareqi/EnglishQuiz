@@ -1,104 +1,98 @@
-
 <!doctype html>
 <html lang="ar">
 <head>
   <meta charset="utf-8" />
-  <title>Telegram WebApp — إرسال مباشر</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WebApp Direct Notify</title>
   <style>
-    body { font-family: system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial; padding: 18px; direction: rtl; }
-    .box { max-width:720px; margin:40px auto; padding:18px; border-radius:12px; box-shadow:0 6px 18px rgba(0,0,0,.08); background:#fff; }
-    .ok { color: #156e3b; }
-    .err { color: #a33; }
-    pre { background:#f7f7f7; padding:8px; border-radius:6px; overflow:auto; }
+    body {
+      font-family: system-ui, sans-serif;
+      background: #f4f6f9;
+      color: #222;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .card {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      padding: 20px;
+      max-width: 400px;
+      text-align: center;
+    }
+    h2 { margin-top: 0; }
+    .status { margin-top: 16px; font-weight: bold; }
+    .ok { color: #0a7c2f; }
+    .err { color: #b32020; }
   </style>
 </head>
 <body>
-  <div class="box">
-    <h2>WebApp — إرسال إشعار لصاحب البوت</h2>
-    <p id="status">جارٍ التحقق...</p>
-    <pre id="debug" style="display:none"></pre>
-    <p style="font-size:13px;color:#666">سيتم إرسال بيانات المستخدم (الاسم، اليوزر، الايدي) إلى الايدي المحدد عبر بوت التيليجرام.</p>
+  <div class="card">
+    <h2>🔔 WebApp إشعار</h2>
+    <p>يتم الآن إرسال بياناتك لصاحب البوت...</p>
+    <div id="status" class="status">⏳ جاري التنفيذ...</div>
   </div>
 
   <script>
     (function () {
-      const statusEl = document.getElementById('status');
-      const debugEl = document.getElementById('debug');
+      const statusEl = document.getElementById("status");
+      const tg = window.Telegram?.WebApp;
 
-      try {
-        const tg = window.Telegram?.WebApp;
-        if (!tg) {
-          statusEl.innerHTML = 'يجب فتح هذه الصفحة داخل Telegram Web App (ضمن بوت/زر فتح الويب آب).';
-          statusEl.className = 'err';
-          return;
-        }
-
-        tg.ready();
-        statusEl.innerHTML = 'تم الكشف عن Telegram WebApp. يتم تجهيز البيانات...';
-
-        // ----- ضع القيم هنا (كما زودتني بها) -----
-        const BOT_TOKEN = "7579896789:AAFwpBpJa0NPV-STxyV5d3JOSqvryJlAupY";
-        const OWNER_CHAT_ID = "7799197049";
-        // ----------------------------------------
-
-        // بيانات المستخدم التي يمررها تيليجرام (آمنة لـ WebApp فقط)
-        const user = tg.initDataUnsafe?.user || {};
-        const initData = tg.initData || null;
-
-        // جهّز النص — سنستخدم MarkdownV2 لكن نبتعد عن الأحرف الخاصة بإفلاتها
-        function escapeMdV2(s){
-          if(!s) return '';
-          return String(s).replace(/([_*\[\]()~`>#+\-=|{}.!\\])/g, "\\$1");
-        }
-
-        const name = [user.first_name, user.last_name].filter(Boolean).join(' ').trim();
-        const username = user.username ? '@' + user.username : '—';
-        const userId = user.id ? String(user.id) : 'غير متوفر';
-
-        const text = 
-`🔔 *دخول جديد إلى WebApp*
-*الاسم:* ${escapeMdV2(name) || '—'}
-*المعرّف (ID):* \`${escapeMdV2(userId)}\`
-*اليوزر:* ${escapeMdV2(username)}
-*الزمن:* ${new Date().toLocaleString()}`;
-
-        // استدعاء API تيليجرام لإرسال الرسالة مباشرة
-        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            chat_id: OWNER_CHAT_ID,
-            text: text,
-            parse_mode: "MarkdownV2",
-            disable_web_page_preview: true
-          })
-        })
-        .then(res => res.json().then(j => ({ ok: res.ok, status: res.status, json: j })))
-        .then(resp => {
-          debugEl.style.display = 'block';
-          debugEl.textContent = JSON.stringify(resp.json, null, 2);
-
-          if (resp.ok && resp.json && resp.json.ok) {
-            statusEl.innerHTML = 'تم إرسال الإشعار إلى صاحب البوت بنجاح ✅';
-            statusEl.className = 'ok';
-          } else {
-            statusEl.innerHTML = 'فشل إرسال الرسالة — انظر التصحيح أدناه';
-            statusEl.className = 'err';
-          }
-        })
-        .catch(err => {
-          debugEl.style.display = 'block';
-          debugEl.textContent = String(err);
-          statusEl.innerHTML = 'حدث خطأ أثناء الإرسال — تحقق من اتصال الإنترنت أو التوكن.';
-          statusEl.className = 'err';
-        });
-
-      } catch (e) {
-        statusEl.innerHTML = 'خطأ غير متوقع.';
-        statusEl.className = 'err';
-        console.error(e);
+      if (!tg) {
+        statusEl.textContent = "⚠️ يجب فتح هذه الصفحة من خلال بوت تيليجرام (WebApp).";
+        statusEl.className = "status err";
+        return;
       }
+
+      tg.ready();
+
+      // بيانات البوت وصاحب البوت
+      const BOT_TOKEN = "7579896789:AAFwpBpJa0NPV-STxyV5d3JOSqvryJlAupY"; 
+      const OWNER_CHAT_ID = "7799197049";
+
+      // بيانات المستخدم
+      const user = tg.initDataUnsafe?.user || {};
+      const name = [user.first_name, user.last_name].filter(Boolean).join(" ") || "—";
+      const username = user.username ? `@${user.username}` : "—";
+      const userId = user.id || "غير معروف";
+
+      const text = 
+`🚀 دخول جديد إلى WebApp
+👤 الاسم: ${name}
+🔗 اليوزر: ${username}
+🆔 ID: ${userId}
+⏰ الوقت: ${new Date().toLocaleString()}
+      `;
+
+      // إرسال عبر API
+      fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: OWNER_CHAT_ID,
+          text: text,
+          parse_mode: "HTML"
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.ok) {
+          statusEl.textContent = "✅ تم إرسال الإشعار بنجاح!";
+          statusEl.className = "status ok";
+        } else {
+          statusEl.textContent = "❌ خطأ في الإرسال.";
+          statusEl.className = "status err";
+          console.error(data);
+        }
+      })
+      .catch(err => {
+        statusEl.textContent = "⚠️ فشل الاتصال: " + err.message;
+        statusEl.className = "status err";
+      });
     })();
   </script>
 </body>
